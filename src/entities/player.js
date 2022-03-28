@@ -10,9 +10,9 @@ class Player {
     mazeHeight,
     cellSize
   ) {
-    this.x = x;
-    this.y = y;
-    this.radius = radius;
+    this.x = cellSize * x - cellSize / 2;
+    this.y = cellSize * y - cellSize / 2;
+    this.radius = cellSize / radius;
     this.color = color;
     this.type = type;
     this.speedX = 0;
@@ -23,6 +23,7 @@ class Player {
     this.cellSize = cellSize;
     this.maze = maze;
     this.speedBoost = 1;
+    this.key = false;
   }
 
   draw(context) {
@@ -81,12 +82,6 @@ class Player {
       this.x % this.cellSize,
       this.y % this.cellSize
     );
-    // console.log(
-    //   "Current pos: X-" +
-    //     Math.floor(this.x / this.cellSize) +
-    //     " Y-" +
-    //     Math.floor(this.y / this.cellSize)
-    // );
   }
 
   determineX(posX, posY, innerX, innerY) {
@@ -112,7 +107,46 @@ class Player {
       this.speedX < 0
     )
       return;
+    //finer polishing lol
+    // else if (
+    //   posY !== 0 &&
+    //   posX !== 0 &&
+    //   this.maze[posY - 1][posX - 1].checkBottom() &&
+    //   innerY < this.cellSize / 3 &&
+    //   innerX < this.cellSize / 2 &&
+    //   this.speedX < 0
+    // )
+    //   return;
+    // else if (
+    //   posX !== 0 &&
+    //   this.maze[posY][posX - 1].checkBottom() &&
+    //   innerY > this.cellSize - this.cellSize / 5 &&
+    //   innerX < this.cellSize / 2 &&
+    //   this.speedX < 0
+    // )
+    //   return;
+    // else if (
+    //   this.maze[posY + 1][posX + 1].checkBottom() &&
+    //   innerY > this.cellSize - this.cellSize / 3 &&
+    //   innerX > this.cellSize / 2 &&
+    //   this.speedX > 0
+    // )
+    //   return;
+    // else if (
+    //   posX !== 0 &&
+    //   this.maze[posY][posX - 1].checkBottom() &&
+    //   innerY > this.cellSize - this.cellSize / 5 &&
+    //   innerX < this.cellSize / 2 &&
+    //   this.speedX < 0
+    // )
+    //   return;
     else {
+      // console.log(
+      //   innerY,
+      //   this.maze[posY - 1][posX + 1],
+      //   this.cellSize - this.cellSize / 3,
+      //   innerX
+      // );
       this.x += this.speedX * this.speedBoost;
     }
   }
