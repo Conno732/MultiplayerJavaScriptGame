@@ -1,4 +1,4 @@
-class Exit {
+export class Exit {
   constructor(cellSize, posX, posY, size) {
     this.x = cellSize * posX + size / 20;
     this.y = cellSize * posY + size / 20;

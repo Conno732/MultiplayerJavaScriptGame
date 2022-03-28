@@ -1,4 +1,6 @@
-class Maze {
+import { Cell } from "./cell.js";
+
+export class Maze {
   //Set the size of the cells. Height and width are determined by cell size
   constructor(pWidth, pHeight, cellSize = 12, lineWidth = 5) {
     this.width = pWidth / cellSize;

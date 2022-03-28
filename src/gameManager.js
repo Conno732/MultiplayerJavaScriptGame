@@ -1,4 +1,10 @@
-class gameManager {
+import { Maze } from "./mazeGen.js";
+import { Player } from "./entities/player.js";
+import { Key } from "./entities/key.js";
+import { Exit } from "./entities/exit.js";
+import { InputHandler } from "./input.js";
+
+export class gameManager {
   inputHandler;
   maze;
   lastTime = 0;
@@ -36,8 +42,12 @@ class gameManager {
     maze.generateNewMaze();
 
     const survivor = new Player(
-      Math.floor(Math.random() * (this.settings.pWidth / cellSize - 1)) + 1,
-      Math.floor(Math.random() * (this.settings.pHeight / cellSize - 1)) + 1,
+      Math.floor(
+        Math.random() * (this.settings.pWidth / this.settings.cellSize - 1)
+      ) + 1,
+      Math.floor(
+        Math.random() * (this.settings.pHeight / this.settings.cellSize - 1)
+      ) + 1,
       3,
       "blue",
       "survivor",
@@ -49,26 +59,36 @@ class gameManager {
 
     const key1 = new Key(
       this.settings.cellSize,
-      Math.floor(Math.random() * (this.settings.pWidth / cellSize - 1)) + 1,
-      Math.floor(Math.random() * (this.settings.pHeight / cellSize - 1)) + 1,
+      Math.floor(
+        Math.random() * (this.settings.pWidth / this.settings.cellSize - 1)
+      ) + 1,
+      Math.floor(
+        Math.random() * (this.settings.pHeight / this.settings.cellSize - 1)
+      ) + 1,
       3
     );
 
     const exit1 = new Exit(
       this.settings.cellSize,
-      Math.floor(Math.random() * (this.settings.pWidth / cellSize - 1)) + 1,
-      Math.floor(Math.random() * (this.settings.pHeight / cellSize - 1)) + 1,
-      cellSize
+      Math.floor(
+        Math.random() * (this.settings.pWidth / this.settings.cellSize - 1)
+      ) + 1,
+      Math.floor(
+        Math.random() * (this.settings.pHeight / this.settings.cellSize - 1)
+      ) + 1,
+      this.settings.cellSize
     );
 
     new InputHandler(survivor);
     //Start after all else is initialized
+    const width = this.settings.pWidth;
+    const height = this.settings.pHeight;
     let lastTime = 0;
     function gameLoop(timeStamp) {
       let deltaTime = timeStamp - lastTime;
       lastTime = timeStamp;
       //code
-      context.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+      context.clearRect(0, 0, width, height);
       maze.drawMaze(context);
       key1.draw(context);
       survivor.update(deltaTime);
@@ -94,7 +114,7 @@ class gameManager {
           Math.floor(exit1.y / maze.cellSize)
       ) {
         alert("you have one the game");
-        context.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+        context.clearRect(0, 0, width, height);
         return;
       } else if (
         Math.floor(survivor.x / maze.cellSize) ==

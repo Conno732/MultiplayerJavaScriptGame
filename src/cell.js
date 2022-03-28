@@ -1,4 +1,4 @@
-class Cell {
+export class Cell {
   constructor(x, y) {
     this.right = 1;
     this.bottom = 1;

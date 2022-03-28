@@ -1,4 +1,4 @@
-class Key {
+export class Key {
   constructor(cellSize, posX, posY, radius, player) {
     this.x = cellSize * posX - cellSize / 2;
     this.y = cellSize * posY - cellSize / 2;

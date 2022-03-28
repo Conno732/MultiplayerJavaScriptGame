@@ -1,4 +1,4 @@
-class InputHandler {
+export class InputHandler {
   constructor(player) {
     document.addEventListener("keydown", (event) => {
       switch (event.key) {
