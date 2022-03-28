@@ -14,7 +14,7 @@ The survivor must locate a key and then an exit, the hunter must prevent the sur
 Current Features:
 - [X] Create and display a randomly generated maze
 - [x] Create a player that can traverse the maze
-- [ ] Player collision detection of walls
+- [X] Player collision detection of walls
 - [ ] Create randomly spawning keys and exists
 - [ ] Player can obtain key and use it to exit
 - [ ] Multiplayer -> set up a hunter/survivor game
