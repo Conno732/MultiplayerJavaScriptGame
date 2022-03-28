@@ -4,12 +4,21 @@ More details to come.
 
 Description:
 
-A randomly generated maze is presented to the player.
-The player must find a key that is placed randomly throughout the maze, and then find the exit.
-Another player (or ai) is hunting the player down, trying to prevent their escape.
+This is (will be) a multiplayer game featuring two players: the survivor and the hunter.
 
-Need to have:
+The two players are placed randomly in the maze, two keys and two exists are also randomly located somewhere in the maze.
 
-- randomly generated maze is displayed for the player
-- player can traverse the maze, find a key which allows for them to exit
--
+The survivor must locate a key and then an exit, the hunter must prevent the survivor from escaping.
+
+
+Current Features:
+- [X] Create and display a randomly generated maze
+- [x] Create a player that can traverse the maze
+- [X] Player collision detection of walls
+- [ ] Create randomly spawning keys and exists
+- [ ] Player can obtain key and use it to exit
+- [ ] Multiplayer -> set up a hunter/survivor game
+- [ ] Win or lose screen is presented accordingly at end of game
+- [ ] AI hunter/survivor to play alone
+
+More features and ideas to come.
