@@ -15,7 +15,7 @@ gameCanvas.width = width;
 const maze = new Maze(width, height, cellSize, lineWidth);
 maze.generateEmptyMaze();
 maze.generateNewMaze();
-maze.drawMaze(context);
+
 const player = new Player(
   cellSize * 3 - cellSize / 2,
   cellSize * 3 - cellSize / 2,
@@ -27,7 +27,12 @@ const player = new Player(
   height,
   cellSize
 );
-player.draw(context);
+
+const key = new Key(
+  cellSize * 20 - cellSize / 2,
+  cellSize * 28 - cellSize / 2,
+  cellSize / 3
+);
 
 new InputHandler(player);
 
@@ -38,6 +43,7 @@ function gameLoop(timeStamp) {
   //code
   context.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
   maze.drawMaze(context);
+  key.draw(context);
   player.update(deltaTime);
   player.draw(context);
   //after

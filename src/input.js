@@ -18,6 +18,9 @@ class InputHandler {
         case "ArrowDown":
           player.moveDown();
           break;
+        case " ":
+          player.boost();
+          break;
       }
       document.addEventListener("keyup", (event) => {
         switch (event.key) {
@@ -36,6 +39,9 @@ class InputHandler {
           case "s":
           case "ArrowDown":
             player.stopY();
+            break;
+          case " ":
+            player.stopBoost();
             break;
         }
       });

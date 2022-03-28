@@ -16,7 +16,7 @@ body {
 #game-container {
   width: 720px;
   height: 480px;
-  background-color: white;
+  background-color: lightslategrey;
   border: solid;
   display: none;
 }

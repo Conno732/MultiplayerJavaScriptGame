@@ -22,7 +22,7 @@ class Player {
     this.mazeWidth = mazeWidth;
     this.cellSize = cellSize;
     this.maze = maze;
-    console.log(this.maze);
+    this.speedBoost = 1;
   }
 
   draw(context) {
@@ -30,6 +30,9 @@ class Player {
     context.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
     context.fillStyle = this.color;
     context.fill();
+    context.lineWidth = 2;
+    context.strokeStyle = "black";
+    context.stroke();
   }
 
   moveLeft() {
@@ -56,6 +59,14 @@ class Player {
     this.speedY = 0;
   }
 
+  boost() {
+    this.speedBoost = 1.7;
+  }
+
+  stopBoost() {
+    this.speedBoost = 1;
+  }
+
   update(deltaTime) {
     if (!deltaTime) return;
     this.determineX(
@@ -70,12 +81,12 @@ class Player {
       this.x % this.cellSize,
       this.y % this.cellSize
     );
-    console.log(
-      "Current pos: X-" +
-        Math.floor(this.x / this.cellSize) +
-        " Y-" +
-        Math.floor(this.y / this.cellSize)
-    );
+    // console.log(
+    //   "Current pos: X-" +
+    //     Math.floor(this.x / this.cellSize) +
+    //     " Y-" +
+    //     Math.floor(this.y / this.cellSize)
+    // );
   }
 
   determineX(posX, posY, innerX, innerY) {
@@ -87,43 +98,49 @@ class Player {
       this.maze[posY][posX].checkRight() &&
       this.speedX > 0
     )
-      console.log("Right wall hit at: " + posX, posY);
+      return;
     else if (
       this.maze[posY][posX].checkRight() &&
       innerX > this.cellSize / 2 &&
       this.speedX > 0
     )
-      console.log("Right wall hit at: " + posX, posY);
+      return;
     else if (
       posX !== 0 &&
       this.maze[posY][posX - 1].checkRight() &&
       innerX < this.cellSize / 2 &&
       this.speedX < 0
     )
-      console.log("Left wall hit");
-    // if (posX === 0 && innerX < this.cellSize / 2 && this.speedX < 0) {
-    //   return;
-    // } else if (posX === this.mazeWidth / this.cellSize && this.speedX > 0)
-    //   return;
-    // else if (
-    //   posX != 0 &&
-    //   innerX > this.cellSize / 2 &&
-    //   this.maze[posY][posX - 1].checkRight() &&
-    //   this.speedX > 0
-    // ) {
-    //   return;
+      return;
     else {
-      this.x += this.speedX;
+      this.x += this.speedX * this.speedBoost;
     }
   }
 
-  determineY(posX, posY) {
-    if (this.y <= this.radius - 0.001) {
-      this.y = this.radius;
-    } else if (this.y >= this.mazeHeight - this.radius + 0.001) {
-      this.y = this.mazeHeight - this.radius;
-    } else {
-      this.y += this.speedY;
+  determineY(posX, posY, innerX, innerY) {
+    if (posY === 0 && innerY < this.cellSize / 2 && this.speedY < 0) return;
+    else if (
+      posY === 0 &&
+      innerY > this.cellSize / 2 &&
+      this.maze[posY][posX].checkBottom() &&
+      this.speedY > 0
+    )
+      return;
+    else if (
+      this.maze[posY][posX].checkBottom() &&
+      innerY > this.cellSize / 2 &&
+      this.speedY > 0
+    )
+      return;
+    else if (
+      posY !== 0 &&
+      this.maze[posY - 1][posX].checkBottom() &&
+      innerY < this.cellSize / 2 &&
+      this.speedY < 0
+    )
+      return;
+    else {
+      this.y += this.speedY * this.speedBoost;
     }
   }
 }
