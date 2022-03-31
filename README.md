@@ -15,9 +15,9 @@ Current Features:
 - [X] Create and display a randomly generated maze
 - [x] Create a player that can traverse the maze
 - [X] Player collision detection of walls
-- [ ] Create randomly spawning keys and exists
-- [ ] Player can obtain key and use it to exit
-- [ ] Multiplayer -> set up a hunter/survivor game
+- [x] Create randomly spawning keys and exists
+- [x] Player can obtain key and use it to exit
+- [x] Multiplayer -> set up a hunter/survivor game
 - [ ] Win or lose screen is presented accordingly at end of game
 - [ ] Vision is obscured in places not within line of sight
 - [ ] AI hunter/survivor to play alone
