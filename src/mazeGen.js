@@ -2,12 +2,33 @@ import { Cell } from "./cell.js";
 
 export class Maze {
   //Set the size of the cells. Height and width are determined by cell size
-  constructor(pWidth, pHeight, cellSize = 12, lineWidth = 5) {
+  constructor(pWidth, pHeight, cellSize, lineWidth) {
+    if (!pWidth) return;
     this.width = pWidth / cellSize;
     this.height = pHeight / cellSize;
     this.cellSize = cellSize;
     this.maze;
     this.lineWidth = lineWidth;
+  }
+
+  buildFromData(maze) {
+    this.width = maze.width;
+    this.height = maze.height;
+    this.cellSize = maze.cellSize;
+    this.lineWidth = maze.lineWidth;
+    this.maze = new Array(this.height);
+    for (let m = 0; m < this.height; m++) {
+      this.maze[m] = new Array(this.width);
+      for (let n = 0; n < this.width; n++) {
+        this.maze[m][n] = new Cell(n, m);
+        if (!maze.maze[m][n].bottom) this.maze[m][n].eraseBottom();
+        if (!maze.maze[m][n].right) this.maze[m][n].eraseRight();
+      }
+    }
+  }
+
+  setMaze(maze) {
+    this.maze = maze;
   }
   //Generate an empty maze (actually a FULL maze)
   generateEmptyMaze() {

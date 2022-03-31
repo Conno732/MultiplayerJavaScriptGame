@@ -11,47 +11,110 @@ export class gameManager {
   lastTime = 0;
   context;
   inputHandler;
-  settings = {
-    pHeight: null,
-    pWidth: null,
-    cellSize: null,
-    cellFactor: null,
-    borderWidth: null,
-  };
 
   constructor(pHeight, pWidth, cellSize, cellFactor, borderWidth) {
-    this.settings.pHeight = pHeight;
-    this.settings.pWidth = pWidth;
-    this.settings.cellSize = cellSize;
-    this.settings.cellFactor = cellFactor;
-    this.settings.borderWidth = borderWidth;
+    this.pHeight = pHeight;
+    this.pWidth = pWidth;
+    this.cellSize = cellSize;
+    this.cellFactor = cellFactor;
+    this.borderWidth = borderWidth;
   }
 
-  start(context) {
-    const network = new NetworkProtocols();
+  start(context, host) {
+    if (!host) {
+      const network = new NetworkProtocols();
+      const maze = new Maze(
+        this.pWidth,
+        this.pHeight,
+        this.cellSize,
+        this.borderWidth
+      );
+      this.maze = maze;
+      maze.generateEmptyMaze();
+      maze.generateNewMaze();
+      const keys = this.generateKeys();
+      const players = this.generatePlayers();
+      const exits = this.generateExits();
+      new InputHandler(players[0]);
+      network.initGame(players, keys, exits, maze);
+      this.startGameLoop(
+        keys,
+        players,
+        exits,
+        maze,
+        context,
+        "survivor",
+        network
+      );
+    } else {
+      console.log("Trying to connect to game " + host);
+      //uh oh
+      setTimeout(() => {
+        const maze = new Maze();
+        maze.buildFromData(network.gameData[`maze`]);
+        const key1 = new Key();
+        key1.buildFromData(this.cellSize, network.gameData[`key1`]);
+        const key2 = new Key();
+        key2.buildFromData(this.cellSize, network.gameData[`key2`]);
+        const keys = [key1, key2];
+        const survivor = new Player();
+        survivor.buildFromData(
+          this.cellSize,
+          maze,
+          this.pWidth,
+          this.pHeight,
+          network.gameData[`players`][`survivor`].x,
+          network.gameData[`players`][`survivor`].y,
+          "survivor"
+        );
+        const hunter = new Player();
+        hunter.buildFromData(
+          this.cellSize,
+          maze,
+          this.pWidth,
+          this.pHeight,
+          network.gameData[`players`][`hunter`].x,
+          network.gameData[`players`][`hunter`].y,
+          "hunter"
+        );
+        const players = [survivor, hunter];
+        const exit1 = new Exit();
+        exit1.buildFromData(
+          this.cellSize,
+          network.gameData["exit1"].x,
+          network.gameData[`exit1`].y
+        );
+        const exit2 = new Exit();
+        exit2.buildFromData(
+          this.cellSize,
+          network.gameData[`exit2`].x,
+          network.gameData[`exit2`].y
+        );
+        const exists = [exit1, exit2];
+        new InputHandler(players[1]);
+        this.startGameLoop(
+          keys,
+          players,
+          exists,
+          maze,
+          context,
+          "hunter",
+          network
+        );
+      }, 1000);
+      const network = new NetworkProtocols(host);
+    }
+  }
 
-    const maze = new Maze(
-      this.settings.pWidth,
-      this.settings.pHeight,
-      this.settings.cellSize,
-      this.settings.borderWidth
-    );
-    this.maze = maze;
-    maze.generateEmptyMaze();
-    maze.generateNewMaze();
-    const keys = this.generateKeys();
-    const players = this.generatePlayers();
-    const exits = this.generateExits();
-
-    new InputHandler(players[0]);
+  startGameLoop(keys, players, exits, maze, context, playerType, network) {
     //Start after all else is initialized
-    const width = this.settings.pWidth;
-    const height = this.settings.pHeight;
+    const width = this.pWidth;
+    const height = this.pHeight;
     let lastTime = 0;
     function gameLoop(timeStamp) {
       let deltaTime = timeStamp - lastTime;
       lastTime = timeStamp;
-      //code
+      //Render loop ??
       context.clearRect(0, 0, width, height);
       maze.drawMaze(context);
       //game logic for all keys
@@ -93,8 +156,22 @@ export class gameManager {
       });
 
       //game logic for players
+      if (playerType === "survivor") {
+        network.uploadSurvivor(players[0].x, players[0].y);
+        if (network.players) {
+          players[1].x = parseInt(network.players.hunter.x);
+          players[1].y = parseInt(network.players.hunter.y);
+        }
+      } else {
+        network.uploadHunter(players[1].x, players[1].y);
+        if (network.players) {
+          players[0].x = parseInt(network.players.survivor.x);
+          players[0].y = parseInt(network.players.survivor.y);
+        }
+      }
       players.forEach((player) => {
         player.update(deltaTime);
+
         player.draw(context);
       });
 
@@ -108,25 +185,16 @@ export class gameManager {
   generateExits() {
     let exits = Array(2);
     exits[0] = new Exit(
-      this.settings.cellSize,
-      Math.floor(
-        Math.random() * (this.settings.pWidth / this.settings.cellSize - 1)
-      ) + 1,
-      Math.floor(
-        Math.random() * (this.settings.pHeight / this.settings.cellSize - 1)
-      ) + 1,
-      this.settings.cellSize
+      this.cellSize,
+      Math.floor(Math.random() * (this.pWidth / this.cellSize - 1)) + 1,
+      Math.floor(Math.random() * (this.pHeight / this.cellSize - 1)) + 1,
+      this.cellSize
     );
-
     exits[1] = new Exit(
-      this.settings.cellSize,
-      Math.floor(
-        Math.random() * (this.settings.pWidth / this.settings.cellSize - 1)
-      ) + 1,
-      Math.floor(
-        Math.random() * (this.settings.pHeight / this.settings.cellSize - 1)
-      ) + 1,
-      this.settings.cellSize
+      this.cellSize,
+      Math.floor(Math.random() * (this.pWidth / this.cellSize - 1)) + 1,
+      Math.floor(Math.random() * (this.pHeight / this.cellSize - 1)) + 1,
+      this.cellSize
     );
     return exits;
   }
@@ -135,34 +203,26 @@ export class gameManager {
     //0 in array is survivor, 1 is hunter
     let ret = Array(2);
     ret[0] = new Player(
-      Math.floor(
-        Math.random() * (this.settings.pWidth / this.settings.cellSize - 1)
-      ) + 1,
-      Math.floor(
-        Math.random() * (this.settings.pHeight / this.settings.cellSize - 1)
-      ) + 1,
+      Math.floor(Math.random() * (this.pWidth / this.cellSize - 1)) + 1,
+      Math.floor(Math.random() * (this.pHeight / this.cellSize - 1)) + 1,
       3,
       "blue",
       "survivor",
       this.maze.getMazeArray(),
-      this.settings.pWidth,
-      this.settings.pHeight,
-      this.settings.cellSize
+      this.pWidth,
+      this.pHeight,
+      this.cellSize
     );
     ret[1] = new Player(
-      Math.floor(
-        Math.random() * (this.settings.pWidth / this.settings.cellSize - 1)
-      ) + 1,
-      Math.floor(
-        Math.random() * (this.settings.pHeight / this.settings.cellSize - 1)
-      ) + 1,
+      Math.floor(Math.random() * (this.pWidth / this.cellSize - 1)) + 1,
+      Math.floor(Math.random() * (this.pHeight / this.cellSize - 1)) + 1,
       3,
       "red",
       "hunter",
       this.maze.getMazeArray(),
-      this.settings.pWidth,
-      this.settings.pHeight,
-      this.settings.cellSize
+      this.pWidth,
+      this.pHeight,
+      this.cellSize
     );
     return ret;
   }
@@ -170,25 +230,19 @@ export class gameManager {
   generateKeys() {
     let keys = Array(2);
     keys[0] = new Key(
-      this.settings.cellSize,
-      Math.floor(
-        Math.random() * (this.settings.pWidth / this.settings.cellSize - 1)
-      ) + 1,
-      Math.floor(
-        Math.random() * (this.settings.pHeight / this.settings.cellSize - 1)
-      ) + 1,
+      this.cellSize,
+      Math.floor(Math.random() * (this.pWidth / this.cellSize - 1)) + 1,
+      Math.floor(Math.random() * (this.pHeight / this.cellSize - 1)) + 1,
       3
     );
     keys[1] = new Key(
-      this.settings.cellSize,
-      Math.floor(
-        Math.random() * (this.settings.pWidth / this.settings.cellSize - 1)
-      ) + 1,
-      Math.floor(
-        Math.random() * (this.settings.pHeight / this.settings.cellSize - 1)
-      ) + 1,
+      this.cellSize,
+      Math.floor(Math.random() * (this.pWidth / this.cellSize - 1)) + 1,
+      Math.floor(Math.random() * (this.pHeight / this.cellSize - 1)) + 1,
       3
     );
     return keys;
   }
+
+  packGameData() {}
 }

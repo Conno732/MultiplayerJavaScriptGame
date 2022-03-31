@@ -1,11 +1,18 @@
 export class Key {
-  constructor(cellSize, posX, posY, radius, player) {
+  constructor(cellSize, posX, posY) {
+    if (!cellSize) return;
     this.x = cellSize * posX - cellSize / 2;
     this.y = cellSize * posY - cellSize / 2;
     this.radius = cellSize / 3;
     this.enabled = true;
   }
 
+  buildFromData(cellSize, key) {
+    this.x = key.x;
+    this.y = key.y;
+    this.radius = cellSize / 3;
+    this.enabled = true;
+  }
   draw(context) {
     if (!this.enabled) return;
     context.beginPath();

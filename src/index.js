@@ -15,7 +15,8 @@ function initGame() {
     cellFactor,
     lineWidth
   );
-  game.start(context);
+  let host = window.prompt("Enter host if guest, otherwise hit enter");
+  game.start(context, host);
 }
 
 initGame();
