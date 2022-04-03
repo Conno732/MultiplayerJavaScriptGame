@@ -18,6 +18,7 @@ export class Maze {
     this.cellSize = maze.cellSize;
     this.lineWidth = maze.lineWidth;
     this.maze = new Array(this.height);
+    this.walls = [];
     for (let m = 0; m < this.height; m++) {
       this.maze[m] = new Array(this.width);
       for (let n = 0; n < this.width; n++) {

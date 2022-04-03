@@ -25,8 +25,15 @@ export class RayCaster {
         const distance = Math.sqrt(xDif * xDif + yDif * yDif);
         if (Math.abs(distance) < Math.abs(smallestDistance)) {
           smallestDistance = distance;
-          // if (distance >= 200)
           point = pt;
+          if (point && distance >= 100) {
+            point[0] =
+              this.rays[i / this.angleDiv].origin[0] +
+              this.rays[i / this.angleDiv].dir[0] * 100;
+            point[1] =
+              this.rays[i / this.angleDiv].origin[1] +
+              this.rays[i / this.angleDiv].dir[1] * 100;
+          }
         }
       }
       if (!point) continue;

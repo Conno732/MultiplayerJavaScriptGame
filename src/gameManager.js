@@ -40,6 +40,11 @@ export class gameManager {
       const exits = this.generateExits();
       new InputHandler(players[0]);
       network.initGame(players, keys, exits, maze);
+      const rayCaster = new RayCaster(
+        players[0].x,
+        players[0].y,
+        maze.getWalls()
+      );
       this.startGameLoop(
         keys,
         players,
@@ -47,7 +52,8 @@ export class gameManager {
         maze,
         context,
         "survivor",
-        network
+        network,
+        rayCaster
       );
     } else {
       console.log("Trying to connect to game " + host);
@@ -95,6 +101,11 @@ export class gameManager {
         );
         const exists = [exit1, exit2];
         new InputHandler(players[1]);
+        const rayCaster = new RayCaster(
+          players[1].x,
+          players[1].y,
+          maze.getWalls()
+        );
         this.startGameLoop(
           keys,
           players,
@@ -102,24 +113,30 @@ export class gameManager {
           maze,
           context,
           "hunter",
-          network
+          network,
+          rayCaster
         );
       }, 1000);
       const network = new NetworkProtocols(host);
     }
   }
 
-  startGameLoop(keys, players, exits, maze, context, playerType, network) {
+  startGameLoop(
+    keys,
+    players,
+    exits,
+    maze,
+    context,
+    playerType,
+    network,
+    rayCaster
+  ) {
     //Start after all else is initialized
     const width = this.pWidth;
     const height = this.pHeight;
     let lastTime = 0;
     //let ray = new Ray(players[0].x, players[0].y, 90);
-    const rayCaster = new RayCaster(
-      players[0].x,
-      players[0].y,
-      maze.getWalls()
-    );
+
     function gameLoop(timeStamp) {
       let deltaTime = timeStamp - lastTime;
       lastTime = timeStamp;
@@ -127,9 +144,10 @@ export class gameManager {
       context.clearRect(0, 0, width, height);
       maze.drawMaze(context, true);
       //game logic for all keys
-      rayCaster.update(players[0].x, players[0].y, context);
+      if (playerType == "hunter")
+        rayCaster.update(players[1].x, players[1].y, context);
+      else rayCaster.update(players[0].x, players[0].y, context);
       maze.drawMaze(context, false);
-
       keys.forEach((key) => {
         key.draw(context);
         if (
