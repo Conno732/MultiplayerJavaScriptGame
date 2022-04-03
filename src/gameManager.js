@@ -1,4 +1,4 @@
-import { Maze } from "./mazeGen.js";
+import { Maze } from "./mazeGeneration/mazeGen.js";
 import { Player } from "./entities/player.js";
 import { Key } from "./entities/key.js";
 import { Exit } from "./entities/exit.js";
@@ -11,6 +11,7 @@ export class gameManager {
   lastTime = 0;
   context;
   inputHandler;
+  walls;
 
   constructor(pHeight, pWidth, cellSize, cellFactor, borderWidth) {
     this.pHeight = pHeight;

@@ -46,7 +46,7 @@ export class NetworkProtocols {
             ref(this.database, `games/${user.uid}/players`),
             (snapshot) => {
               this.players = snapshot.val() || {};
-              console.log(this.players);
+              //console.log(this.players);
             }
           );
           set(ref(this.database, `games/${this.userId}`), {
@@ -92,7 +92,7 @@ export class NetworkProtocols {
           .then((snapshot) => {
             if (snapshot.exists()) {
               this.gameData = snapshot.val();
-              console.log(snapshot.val());
+              //console.log(snapshot.val());
             } else {
               console.log("No data available");
             }
@@ -102,7 +102,7 @@ export class NetworkProtocols {
           });
         onValue(ref(this.database, `games/${host}/players`), (snapshot) => {
           this.players = snapshot.val() || {};
-          console.log(this.players);
+          //console.log(this.players);
         });
       });
     }

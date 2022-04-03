@@ -9,6 +9,7 @@ export class Maze {
     this.cellSize = cellSize;
     this.maze;
     this.lineWidth = lineWidth;
+    this.walls = [];
   }
 
   buildFromData(maze) {
@@ -58,8 +59,6 @@ export class Maze {
       current = stack[stack.length - 1];
       coordX = current.getX();
       coordY = current.getY();
-      //   console.log(coordX, coordY);
-      //   console.log(stack);
       direction = Math.floor(Math.random() * 4); // 0 left, 1 right, 2 up, 3 down
       //check if direction is in bounds
       if (
@@ -142,6 +141,12 @@ export class Maze {
             m * this.cellSize + this.cellSize + this.lineWidth / 2
           );
           context.stroke();
+          this.walls.push([
+            n * this.cellSize + this.cellSize,
+            m * this.cellSize - this.lineWidth / 2,
+            n * this.cellSize + this.cellSize,
+            m * this.cellSize + this.cellSize + this.lineWidth / 2,
+          ]);
         }
 
         if (this.maze[m][n].checkBottom()) {
@@ -155,6 +160,12 @@ export class Maze {
             m * this.cellSize + this.cellSize
           );
           context.stroke();
+          this.walls.push([
+            n * this.cellSize - this.lineWidth / 2,
+            m * this.cellSize + this.cellSize,
+            n * this.cellSize + this.cellSize + this.lineWidth / 2,
+            m * this.cellSize + this.cellSize,
+          ]);
         }
       }
     }
