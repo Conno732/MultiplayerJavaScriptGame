@@ -19,7 +19,7 @@ Current Features:
 - [x] Player can obtain key and use it to exit
 - [x] Multiplayer -> set up a hunter/survivor game
 - [ ] Win or lose screen is presented accordingly at end of game
-- [ ] Vision is obscured in places not within line of sight
+- [ ] 2d Raycasting to reduce visibility of other player and game elements
 - [ ] AI hunter/survivor to play alone
 
 More features and ideas to come.
