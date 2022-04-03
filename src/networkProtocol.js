@@ -39,7 +39,6 @@ export class NetworkProtocols {
       onAuthStateChanged(this.auth, (user) => {
         if (user) {
           this.userId = user.uid;
-          console.log(user);
           this.gameRef = ref(this.database, `games/${user.uid}`);
           set(this.gameRef, { check: true });
           onDisconnect(this.gameRef).remove();

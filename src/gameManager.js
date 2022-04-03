@@ -174,6 +174,7 @@ export class gameManager {
             Math.floor(exit.y / maze.cellSize)
         ) {
           alert("you have won the game");
+          players[0].key = false;
           // context.clearRect(0, 0, width, height);
           // return;
         } else if (
