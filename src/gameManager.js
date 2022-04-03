@@ -4,6 +4,8 @@ import { Key } from "./entities/key.js";
 import { Exit } from "./entities/exit.js";
 import { InputHandler } from "./input.js";
 import { NetworkProtocols } from "./networkProtocol.js";
+import { Ray } from "./raycasting/ray.js";
+import { RayCaster } from "./raycasting/raycaster.js";
 
 export class gameManager {
   inputHandler;
@@ -112,13 +114,22 @@ export class gameManager {
     const width = this.pWidth;
     const height = this.pHeight;
     let lastTime = 0;
+    //let ray = new Ray(players[0].x, players[0].y, 90);
+    const rayCaster = new RayCaster(
+      players[0].x,
+      players[0].y,
+      maze.getWalls()
+    );
     function gameLoop(timeStamp) {
       let deltaTime = timeStamp - lastTime;
       lastTime = timeStamp;
       //Render loop ??
       context.clearRect(0, 0, width, height);
-      maze.drawMaze(context);
+      maze.drawMaze(context, true);
       //game logic for all keys
+      rayCaster.update(players[0].x, players[0].y, context);
+      maze.drawMaze(context, false);
+
       keys.forEach((key) => {
         key.draw(context);
         if (
@@ -144,7 +155,7 @@ export class gameManager {
           Math.floor(players[0].y / maze.cellSize) ==
             Math.floor(exit.y / maze.cellSize)
         ) {
-          alert("you have one the game");
+          alert("you have won the game");
           // context.clearRect(0, 0, width, height);
           // return;
         } else if (
@@ -175,7 +186,9 @@ export class gameManager {
 
         player.draw(context);
       });
-
+      context.restore();
+      // ray.update(players[0].x, players[0].y);
+      //ray.draw(context);
       //after
       requestAnimationFrame(gameLoop);
     }

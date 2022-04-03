@@ -125,7 +125,51 @@ export class Maze {
     }
   }
 
-  drawMaze(context) {
+  getWalls() {
+    this.walls.push([0, 0, this.width * this.cellSize, 0]);
+    this.walls.push([0, 0, 0, this.height * this.cellSize]);
+    for (let m = 0; m < this.height; m++) {
+      for (let n = 0; n < this.width; n++) {
+        if (this.maze[m][n].checkRight()) {
+          this.walls.push([
+            n * this.cellSize + this.cellSize,
+            m * this.cellSize - this.lineWidth / 2,
+            n * this.cellSize + this.cellSize,
+            m * this.cellSize + this.cellSize + this.lineWidth / 2,
+          ]);
+        }
+
+        if (this.maze[m][n].checkBottom()) {
+          this.walls.push([
+            n * this.cellSize - this.lineWidth / 2,
+            m * this.cellSize + this.cellSize,
+            n * this.cellSize + this.cellSize + this.lineWidth / 2,
+            m * this.cellSize + this.cellSize,
+          ]);
+        }
+      }
+    }
+    return this.walls;
+  }
+
+  drawMaze(context, color) {
+    if (color) {
+      context.fillStyle = "#373737";
+      context.fillRect(
+        0,
+        0,
+        this.width * this.cellSize,
+        this.height * this.cellSize
+      );
+    } else {
+      context.fillStyle = "#D3D3D3";
+      context.fillRect(
+        0,
+        0,
+        this.width * this.cellSize,
+        this.height * this.cellSize
+      );
+    }
     context.strokeStyle = "black";
     context.lineWidth = this.lineWidth;
     for (let m = 0; m < this.height; m++) {
@@ -141,12 +185,6 @@ export class Maze {
             m * this.cellSize + this.cellSize + this.lineWidth / 2
           );
           context.stroke();
-          this.walls.push([
-            n * this.cellSize + this.cellSize,
-            m * this.cellSize - this.lineWidth / 2,
-            n * this.cellSize + this.cellSize,
-            m * this.cellSize + this.cellSize + this.lineWidth / 2,
-          ]);
         }
 
         if (this.maze[m][n].checkBottom()) {
@@ -160,12 +198,6 @@ export class Maze {
             m * this.cellSize + this.cellSize
           );
           context.stroke();
-          this.walls.push([
-            n * this.cellSize - this.lineWidth / 2,
-            m * this.cellSize + this.cellSize,
-            n * this.cellSize + this.cellSize + this.lineWidth / 2,
-            m * this.cellSize + this.cellSize,
-          ]);
         }
       }
     }
