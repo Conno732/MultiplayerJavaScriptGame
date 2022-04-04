@@ -20,8 +20,11 @@ Current Features:
 - [x] Create randomly spawning keys and exists
 - [x] Player can obtain key and use it to exit
 - [x] Multiplayer -> set up a hunter/survivor game
-- [ ] Win or lose screen is presented accordingly at end of game
+- [X] Win or lose screen is presented accordingly at end of game
 - [x] 2d Raycasting to reduce visibility of other player and game elements
+- [ ] Add synced network connection
+- [ ] Quick play
+- [ ] Prevent more than two players from joining a game
 - [ ] AI hunter/survivor to play alone
 
 More features and ideas to come.
