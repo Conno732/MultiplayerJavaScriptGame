@@ -41,7 +41,6 @@ export class NetworkProtocols {
           this.userId = user.uid;
           console.log(this.userId);
           this.gameRef = ref(this.database, `games/${user.uid}`);
-          set(this.gameRef, { check: true });
           onDisconnect(this.gameRef).remove();
           onValue(
             ref(this.database, `games/${user.uid}/players`),
@@ -59,6 +58,7 @@ export class NetworkProtocols {
               hunter: {
                 x: `${this.playerData[1].x}`,
                 y: `${this.playerData[1].y}`,
+                caught: false,
               },
             },
             key1: {
@@ -116,19 +116,24 @@ export class NetworkProtocols {
     this.mazeData = mazeData;
   }
 
-  uploadSurvivor(x, y) {
+  uploadSurvivor(x, y, key, exit) {
     if (!this.userId) return;
+
     set(ref(this.database, `games/${this.userId}/players/survivor`), {
       x: `${x}`,
       y: `${y}`,
+      key: key,
+      exit: exit,
     });
   }
 
-  uploadHunter(x, y) {
+  uploadHunter(x, y, caught) {
     if (!this.userId) return; //
+
     set(ref(this.database, `games/${this.userId}/players/hunter`), {
       x: `${x}`,
       y: `${y}`,
+      caught,
     });
   }
 

@@ -136,6 +136,9 @@ export class gameManager {
     const height = this.pHeight;
     let lastTime = 0;
     let gameEnded = false;
+    let caught = false;
+    let keyGlobal = false;
+    let exitGlobal = false;
     //let ray = new Ray(players[0].x, players[0].y, 90);
     function endGame(context, caught, player) {
       context.restore();
@@ -164,6 +167,7 @@ export class gameManager {
         rayCaster.update(players[1].x, players[1].y, context);
       else rayCaster.update(players[0].x, players[0].y, context);
       maze.drawMaze(context, false);
+
       keys.forEach((key) => {
         key.draw(context);
         if (
@@ -175,6 +179,13 @@ export class gameManager {
         ) {
           key.enabled = false;
           players[0].key = true;
+          keyGlobal = true;
+          network.uploadSurvivor(
+            players[0].x,
+            players[0].y,
+            keyGlobal,
+            exitGlobal
+          );
           console.log("survivor has key!");
         }
       });
@@ -182,6 +193,7 @@ export class gameManager {
       //game logic for exits
       exits.forEach((exit) => {
         exit.draw(context);
+        //console.log(players[0].key);
         if (
           players[0].key &&
           Math.floor(players[0].x / maze.cellSize) ==
@@ -189,8 +201,13 @@ export class gameManager {
           Math.floor(players[0].y / maze.cellSize) ==
             Math.floor(exit.y / maze.cellSize)
         ) {
-          //alert("you have won the game");
-          players[0].key = false;
+          exitGlobal = true;
+          network.uploadSurvivor(
+            players[0].x,
+            players[0].y,
+            keyGlobal,
+            exitGlobal
+          );
           endGame(context, false, playerType);
           return;
           // context.clearRect(0, 0, width, height);
@@ -205,29 +222,46 @@ export class gameManager {
       });
 
       //game logic for players
-      if (playerType === "survivor") {
-        network.uploadSurvivor(players[0].x, players[0].y);
-        if (network.players) {
-          players[1].x = parseInt(network.players.hunter.x);
-          players[1].y = parseInt(network.players.hunter.y);
-        }
-      } else {
-        network.uploadHunter(players[1].x, players[1].y);
-        if (network.players) {
-          players[0].x = parseInt(network.players.survivor.x);
-          players[0].y = parseInt(network.players.survivor.y);
-        }
-      }
+
       players.forEach((player) => {
         player.update(deltaTime);
         player.draw(context);
       });
+      //console.log(Math.floor(players[0].x / maze.cellSize), )
+      if (playerType === "survivor") {
+        network.uploadSurvivor(
+          players[0].x,
+          players[0].y,
+          keyGlobal,
+          exitGlobal
+        );
+        if (network.players) {
+          players[1].x = parseInt(network.players.hunter.x);
+          players[1].y = parseInt(network.players.hunter.y);
+          if (network.players.hunter.caught) {
+            endGame(context, true, playerType);
+            return;
+          }
+        }
+      } else {
+        network.uploadHunter(players[1].x, players[1].y, caught);
+        if (network.players) {
+          players[0].x = parseInt(network.players.survivor.x);
+          players[0].y = parseInt(network.players.survivor.y);
+          if (network.players.survivor.key && network.players.survivor.exit) {
+            endGame(context, false, playerType);
+            return;
+          }
+        }
+      }
       if (
         Math.floor(players[0].x / maze.cellSize) ==
           Math.floor(players[1].x / maze.cellSize) &&
         Math.floor(players[0].y / maze.cellSize) ==
           Math.floor(players[1].y / maze.cellSize)
       ) {
+        caught = true;
+        network.uploadHunter(players[1].x, players[1].y, caught);
         console.log("caught");
         endGame(context, true, playerType);
         return;
