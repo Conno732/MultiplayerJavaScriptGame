@@ -135,7 +135,23 @@ export class gameManager {
     const width = this.pWidth;
     const height = this.pHeight;
     let lastTime = 0;
+    let gameEnded = false;
     //let ray = new Ray(players[0].x, players[0].y, 90);
+    function endGame(context, caught, player) {
+      context.restore();
+      context.clearRect(0, 0, width, height);
+      const gameOver = document.getElementById("game-over");
+      gameOver.style.display = "flex";
+      gameEnded = true;
+      const results = document.getElementById("results");
+      if (player == "hunter") {
+        if (caught) results.innerText = "You caught the survivor, good job!";
+        else results.innerHTML = "You failed to catch the survivor, you lose!";
+      } else {
+        if (!caught) results.innerText = "You escaped, good job!";
+        else results.innerText = "You were caught, you lose!";
+      }
+    }
 
     function gameLoop(timeStamp) {
       let deltaTime = timeStamp - lastTime;
@@ -173,8 +189,10 @@ export class gameManager {
           Math.floor(players[0].y / maze.cellSize) ==
             Math.floor(exit.y / maze.cellSize)
         ) {
-          alert("you have won the game");
+          //alert("you have won the game");
           players[0].key = false;
+          endGame(context, false, playerType);
+          return;
           // context.clearRect(0, 0, width, height);
           // return;
         } else if (
@@ -202,14 +220,23 @@ export class gameManager {
       }
       players.forEach((player) => {
         player.update(deltaTime);
-
         player.draw(context);
       });
+      if (
+        Math.floor(players[0].x / maze.cellSize) ==
+          Math.floor(players[1].x / maze.cellSize) &&
+        Math.floor(players[0].y / maze.cellSize) ==
+          Math.floor(players[1].y / maze.cellSize)
+      ) {
+        console.log("caught");
+        endGame(context, true, playerType);
+        return;
+      }
       context.restore();
       // ray.update(players[0].x, players[0].y);
       //ray.draw(context);
       //after
-      requestAnimationFrame(gameLoop);
+      if (!gameEnded) requestAnimationFrame(gameLoop);
     }
 
     gameLoop();

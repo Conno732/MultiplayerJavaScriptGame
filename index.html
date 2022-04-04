@@ -16,7 +16,28 @@
 
 <!-- TODO: Add SDKs for Firebase products that you want to use
      https://firebase.google.com/docs/web/setup#available-libraries -->
+    <div id="overlay">
+      <div class="windowPopup">
+        <p>Enter game ID if joining game, enter nothing to host</p> 
+        <input type="text" id="host">
+        <p>If hosting, enter if you want to be survivor or hunter</p>
+        <div>
+        <label for="survivor">Survivor</label>
+        <input id="survivor" type="radio" name="choice1" value="Survivor" checked>
+        <label for="hunter">Hunter</label>
+        <input id="hunter"type="radio" name="choice1" value="Hunter">
+      </div>
+      <button id="start-game">Start Game</button>
+      </div>
+    </div>
 
+    <div id="game-over">
+      <div class="windowPopup">
+        <h1>Game Over</h1>
+        <p id="results"></p>
+      </div>
+    </div>
+  
     <script type="module" src="./dist/index.js"></script>
   </body>
 </html>

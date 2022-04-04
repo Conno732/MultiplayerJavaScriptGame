@@ -1,7 +1,7 @@
 import { gameManager } from "./gameManager.js";
 import { canvasGen } from "./canvasLayer/canvasGen.js";
 
-function initGame() {
+function initGame(host) {
   const width = 1080;
   const height = 720;
   const canvas = new canvasGen(width, height);
@@ -15,8 +15,14 @@ function initGame() {
     cellFactor,
     lineWidth
   );
-  let host = window.prompt("Enter host if guest, otherwise hit enter");
   game.start(context, host);
 }
 
-initGame();
+const startButton = document.getElementById("start-game");
+const overlay = document.getElementById("overlay");
+startButton.addEventListener("click", () => {
+  overlay.style.display = "none";
+  const hostIn = document.getElementById("host");
+  const host = hostIn.value;
+  initGame(host);
+});
