@@ -40,6 +40,7 @@ export class NetworkProtocols {
         if (user) {
           this.userId = user.uid;
           console.log(this.userId);
+          alert("The join code is: " + user.uid);
           this.gameRef = ref(this.database, `games/${user.uid}`);
           onDisconnect(this.gameRef).remove();
           onValue(
