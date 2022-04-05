@@ -5,7 +5,7 @@ https://conno732.github.io/MultiplayerJavaScriptGame/
 
 Description:
 
-This is (will be) a multiplayer game featuring two players: the survivor and the hunter.
+This is a multiplayer game featuring two players: the survivor and the hunter.
 
 The two players are placed randomly in the maze, two keys and two exists are also randomly located somewhere in the maze.
 
