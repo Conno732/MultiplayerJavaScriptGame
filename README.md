@@ -11,7 +11,7 @@ The two players are placed randomly in the maze, two keys and two exists are als
 
 The survivor must locate a key and then an exit, the hunter must prevent the survivor from escaping.
 
-###Core Features
+### Core Features
 - [x] Create and display a randomly generated maze
 - [x] Create a player that can traverse the maze
 - [x] Player collision detection of walls
@@ -21,7 +21,7 @@ The survivor must locate a key and then an exit, the hunter must prevent the sur
 - [X] Win or lose screen is presented accordingly at end of game
 - [x] 2d Raycasting to reduce visibility of other player and game elements
 - [ ] Allow host to choose if they're hunter/survivor
-###Bonus Features
+### Bonus Features
 - [ ] Add synced network connection
 - [ ] Quick play
 - [ ] Add party system where players can browse through players looking to play games
