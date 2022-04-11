@@ -52,13 +52,13 @@ export class Player {
   }
 
   moveLeft() {
-    this.direction -= 10;
+    this.direction -= 15;
     this.direction = this.direction % 360;
     // this.speedX = -this.maxSpeed;
   }
 
   moveRight() {
-    this.direction += 10;
+    this.direction += 15;
     if (this.direction < 0) this.direction += 360;
     this.direction = this.direction % 360;
     //this.speedX = this.maxSpeed;

@@ -4,7 +4,7 @@ export class RayCaster {
   constructor(x, y, walls) {
     this.pos;
     this.rays = [];
-    this.angleDiv = 1;
+    this.angleDiv = 0.5;
     this.walls = walls;
     this.canvas = [];
     for (let i = 0; i < 360; i += this.angleDiv) {
@@ -84,7 +84,7 @@ export class RayCaster {
         i * (this.angleDiv / 90) * width,
         height / this.canvas[i] + 50,
         (this.angleDiv / 90) * width,
-        height / (this.canvas[i] * 0.08)
+        height / (this.canvas[i] * 0.06)
       );
       ctx.fill();
     }
