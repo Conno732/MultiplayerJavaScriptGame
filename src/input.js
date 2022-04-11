@@ -35,10 +35,12 @@ export class InputHandler {
           case "w":
           case "ArrowUp":
             player.stopY();
+            player.stopX();
             break;
           case "s":
           case "ArrowDown":
             player.stopY();
+            player.stopX();
             break;
           case " ":
             player.stopBoost();

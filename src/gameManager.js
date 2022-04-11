@@ -161,15 +161,23 @@ export class gameManager {
       lastTime = timeStamp;
       //Render loop ??
       context.clearRect(0, 0, width, height);
-      maze.drawMaze(context, true);
+      //maze.drawMaze(context, true);
       //game logic for all keys
+      // maze.drawMaze(context, false);
+
       if (playerType == "hunter")
         rayCaster.update(players[1].x, players[1].y, context);
-      else rayCaster.update(players[0].x, players[0].y, context);
-      maze.drawMaze(context, false);
+      else
+        rayCaster.update(
+          players[0].x,
+          players[0].y,
+          context,
+          players[0].direction
+        );
+      rayCaster.drawCasting(context, width, height);
 
       keys.forEach((key) => {
-        key.draw(context);
+        //key.draw(context);
         if (
           key.enabled &&
           Math.floor(players[0].x / maze.cellSize) ==
@@ -192,7 +200,7 @@ export class gameManager {
 
       //game logic for exits
       exits.forEach((exit) => {
-        exit.draw(context);
+        // exit.draw(context);
         //console.log(players[0].key);
         if (
           players[0].key &&
@@ -225,7 +233,7 @@ export class gameManager {
 
       players.forEach((player) => {
         player.update(deltaTime);
-        player.draw(context);
+        // player.draw(context);
       });
       //console.log(Math.floor(players[0].x / maze.cellSize), )
       if (playerType === "survivor") {
@@ -266,7 +274,7 @@ export class gameManager {
         endGame(context, true, playerType);
         return;
       }
-      context.restore();
+      //context.restore();
       // ray.update(players[0].x, players[0].y);
       //ray.draw(context);
       //after

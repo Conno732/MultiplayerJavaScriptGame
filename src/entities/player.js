@@ -15,6 +15,8 @@ export class Player {
     this.maxSpeed = 3;
     this.speedBoost = 1;
     this.key = false;
+    this.direction = 0;
+
     if (!x) return;
     this.x = cellSize * x - cellSize / 2;
     this.y = cellSize * y - cellSize / 2;
@@ -50,19 +52,30 @@ export class Player {
   }
 
   moveLeft() {
-    this.speedX = -this.maxSpeed;
+    this.direction -= 10;
+    this.direction = this.direction % 360;
+    // this.speedX = -this.maxSpeed;
   }
 
   moveRight() {
-    this.speedX = this.maxSpeed;
+    this.direction += 10;
+    if (this.direction < 0) this.direction += 360;
+    this.direction = this.direction % 360;
+    //this.speedX = this.maxSpeed;
   }
 
   moveUp() {
-    this.speedY = -this.maxSpeed;
+    this.speedY =
+      this.maxSpeed * Math.cos((this.direction - 45) * (Math.PI / 180));
+    this.speedX =
+      -this.maxSpeed * Math.sin((this.direction - 45) * (Math.PI / 180));
   }
 
   moveDown() {
-    this.speedY = +this.maxSpeed;
+    this.speedY =
+      -this.maxSpeed * Math.cos((this.direction - 45) * (Math.PI / 180));
+    this.speedX =
+      this.maxSpeed * Math.sin((this.direction - 45) * (Math.PI / 180));
   }
 
   stopX() {
@@ -82,6 +95,7 @@ export class Player {
   }
 
   update(deltaTime) {
+    //console.log(this.direction);
     if (!deltaTime) return;
     this.determineX(
       Math.floor(this.x / this.cellSize),
